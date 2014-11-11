@@ -5,7 +5,6 @@ module.exports = function(app) {
 	// api ---------------------------------------------------------------------
 	// get all todos
 	app.get('/api/todos', function(req, res) {
-
 		// use mongoose to get all todos in the database
 		Todo.find(function(err, todos) {
 
@@ -55,8 +54,9 @@ module.exports = function(app) {
 		});
 	});
 
-	// application -------------------------------------------------------------
+	// frontend routes =========================================================
+	// route to handle all angular requests
 	app.get('*', function(req, res) {
-		res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+		res.sendfile('./public/index.html');
 	});
 };
