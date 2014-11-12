@@ -9,12 +9,12 @@ scotchTodo.config(['$routeProvider', '$locationProvider', function($routeProvide
 
 		.when('/register', {
 			templateUrl: 'views/register.html',
-			controller: 'mainController'
+			controller: 'userController'
 		})
 		
 		.when('/login', {
 			templateUrl: 'views/login.html',
-			controller: 'mainController'
+			controller: 'userController'
 		});
 
 	$locationProvider.html5Mode(true);

@@ -1,7 +1,7 @@
 var Todo = require('./models/todo');
+var User = require('./models/user');
 
 module.exports = function(app) {
-
 	// api ---------------------------------------------------------------------
 	// get all todos
 	app.get('/api/todos', function(req, res) {
@@ -52,6 +52,21 @@ module.exports = function(app) {
 				res.json(todos);
 			});
 		});
+	});
+
+	// register user
+	app.post('/api/user/register', function(req, res){
+		var name = req.body.user.username;
+		var pass = req.body.user.password;
+		console.log('register: ' + name + ' ' + pass);
+		res.end("end");
+	});
+	// login user
+	app.post('/api/user/login', function(req, res){
+		var name = req.body.user.username;
+		var pass = req.body.user.password;
+		console.log('login: ' + name + ' ' + pass);
+		res.end("end");
 	});
 
 	// frontend routes =========================================================

@@ -46,4 +46,24 @@ angular.module('todoController', [])
 					$scope.todos = data; // assign our new list of todos
 				});
 		};
+	}])
+	.controller('userController', ['$scope','$http', function($scope, $http) {
+		$scope.formData = {};
+		// create a user after checking it
+		$scope.mark = "empty";
+		$scope.register = function() {
+			$scope.mark = "register";
+			$http.post('/api/user/register', $scope.formData)
+			.success(function(data){
+				$scope.mark = "register success";
+			});
+		}
+
+		$scope.login = function() {
+			$scope.mark = "login";
+			$http.post('/api/user/login', $scope.formData)
+			.success(function(data){
+				$scope.mark = "login success";
+			});
+		}
 	}]);
