@@ -38,7 +38,6 @@ angular.module('todoController', [])
 		// delete a todo after checking it
 		$scope.deleteTodo = function(id) {
 			$scope.loading = true;
-
 			Todos.delete(id)
 				// if successful creation, call our get function to get all the new todos
 				.success(function(data) {
@@ -47,23 +46,50 @@ angular.module('todoController', [])
 				});
 		};
 	}])
-	.controller('userController', ['$scope','$http', function($scope, $http) {
+	
+	.controller('userController', ['$scope', '$window', '$http', function($scope, $window, $http) {
 		$scope.formData = {};
 		// create a user after checking it
-		$scope.mark = "empty";
+		$scope.message = '';
+		$scope.user = null;
+		$scope.alreadyLogin = false;
+		if($window.sessionStorage["user"]) {
+        	$scope.user = JSON.parse($window.sessionStorage["user"]);
+        	$scope.alreadyLogin = true;
+      	}
 		$scope.register = function() {
-			$scope.mark = "register";
-			$http.post('/api/user/register', $scope.formData)
-			.success(function(data){
-				$scope.mark = "register success";
+			$http.post('/api/user/exist', $scope.formData)
+			.success(function(user){
+				if(user == undefined){
+					$http.post('/api/user/register', $scope.formData)
+					.success(function(user){
+						$scope.formData = {};
+						$window.sessionStorage["user"] = JSON.stringify(user);
+						$scope.alreadyLogin = true;
+						$window.location = '/';
+					});
+				} else {
+					$scope.message = 'user already exist!';
+				}
 			});
 		}
 
 		$scope.login = function() {
-			$scope.mark = "login";
 			$http.post('/api/user/login', $scope.formData)
-			.success(function(data){
-				$scope.mark = "login success";
+			.success(function(user){
+				if(user == undefined) {
+					$scope.message = 'credential error!';
+				} else {
+					$scope.formData = {};
+					$window.sessionStorage["user"] = JSON.stringify(user);	
+					$scope.alreadyLogin = true;	
+					$window.location = '/';
+				}
 			});
+		}
+		$scope.logout = function() {
+			$scope.alreadyLogin = false;
+			$scope.user = undefined;
+			$window.sessionStorage.removeItem('user');
 		}
 	}]);

@@ -31,17 +31,23 @@
 
 </head>
 <!-- SET THE CONTROLLER -->
-<body ng-app="scotchTodo">
+<body ng-app="scotchTodo" ng-controller="userController">
+	{{message}}
 	<div class="container">
 		<!-- HEADER -->
 		<nav class="navbar navbar-inverse">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="/">Todo List App</a>
 			</div>
-			<ul class="nav navbar-nav pull-right">
+			<ul class="nav navbar-nav pull-right" ng-show="!alreadyLogin">
 				<li><a href="/login">Login</a></li>
 				<li><a href="/register">Register</a></li>
+			</ul>			
+			<ul class="nav navbar-nav pull-right" ng-show="alreadyLogin">
+				<li><a href="#">{{user.name}}</a></li>
+				<li><a href="#" ng-click="logout()">Logout</a></li>
 			</ul>
+			
 		</nav>
 
 		<div ng-view></div>	

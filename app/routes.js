@@ -1,5 +1,6 @@
 var Todo = require('./models/todo');
 var User = require('./models/user');
+var bcrypt = require('bcrypt');
 
 module.exports = function(app) {
 	// api ---------------------------------------------------------------------
@@ -54,19 +55,50 @@ module.exports = function(app) {
 		});
 	});
 
+	// check username exist
+	app.post('/api/user/exist', function(req, res){
+		var name = req.body.user.username;
+		User.findOne({'name': name}, function(err, user){
+			//if(err)	throws err;
+			res.json(user);
+		});
+	});
+
 	// register user
 	app.post('/api/user/register', function(req, res){
 		var name = req.body.user.username;
 		var pass = req.body.user.password;
-		console.log('register: ' + name + ' ' + pass);
-		res.end("end");
+		var user = new User({'name': name, 'pass': pass});
+		bcrypt.genSalt(12, function(err, salt){
+			//if(err)	return next(err);
+			user.salt = salt;
+			bcrypt.hash(user.pass, salt, function(err, hash){
+				//if(err)	return next(err);
+				user.pass = hash;
+				user.save(function(err){
+					if(err) console.log('err: ' + err);
+					res.json(user);
+				});
+			}); 
+		});
 	});
 	// login user
 	app.post('/api/user/login', function(req, res){
 		var name = req.body.user.username;
 		var pass = req.body.user.password;
-		console.log('login: ' + name + ' ' + pass);
-		res.end("end");
+		console.log(name + ":" + pass);
+		User.findOne({'name': name}, function(err, user){
+			if(user == null)	res.json(null);
+			else {
+				bcrypt.hash(pass, user.salt, function(err, hash){
+					if(user.pass == hash){
+						res.json(user);
+					} else {
+						res.json(null);
+					}
+				}); 
+			}	
+		});
 	});
 
 	// frontend routes =========================================================
