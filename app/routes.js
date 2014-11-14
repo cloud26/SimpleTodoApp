@@ -5,9 +5,11 @@ var bcrypt = require('bcrypt');
 module.exports = function(app) {
 	// api ---------------------------------------------------------------------
 	// get all todos
-	app.get('/api/todos', function(req, res) {
+	app.get('/api/todos/:name', function(req, res) {
+		var name = req.params.name;
+		console.log('get todos: ' + name);
 		// use mongoose to get all todos in the database
-		Todo.find(function(err, todos) {
+		Todo.find({name: name}, function(err, todos) {
 
 			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
 			if (err)
@@ -18,18 +20,18 @@ module.exports = function(app) {
 	});
 
 	// create todo and send back all todos after creation
-	app.post('/api/todos', function(req, res) {
-
+	app.post('/api/todos/:name', function(req, res) {
 		// create a todo, information comes from AJAX request from Angular
+		var name = req.params.name;
 		Todo.create({
+			name : name,
 			text : req.body.text,
 			done : false
 		}, function(err, todo) {
 			if (err)
 				res.send(err);
-
 			// get and return all the todos after you create another
-			Todo.find(function(err, todos) {
+			Todo.find({name : name}, function(err, todos) {
 				if (err)
 					res.send(err)
 				res.json(todos);
@@ -39,7 +41,8 @@ module.exports = function(app) {
 	});
 
 	// delete a todo
-	app.delete('/api/todos/:todo_id', function(req, res) {
+	app.delete('/api/todos/:name/:todo_id', function(req, res) {
+		var name = req.params.name;
 		Todo.remove({
 			_id : req.params.todo_id
 		}, function(err, todo) {
@@ -47,7 +50,7 @@ module.exports = function(app) {
 				res.send(err);
 
 			// get and return all the todos after you create another
-			Todo.find(function(err, todos) {
+			Todo.find({name : name}, function(err, todos) {
 				if (err)
 					res.send(err)
 				res.json(todos);
@@ -86,7 +89,7 @@ module.exports = function(app) {
 	app.post('/api/user/login', function(req, res){
 		var name = req.body.user.username;
 		var pass = req.body.user.password;
-		console.log(name + ":" + pass);
+		//console.log(name + ":" + pass);
 		User.findOne({'name': name}, function(err, user){
 			if(user == null)	res.json(null);
 			else {

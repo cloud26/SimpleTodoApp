@@ -1,17 +1,22 @@
 angular.module('todoController', [])
 	// inject the Todo service factory into our controller
-	.controller('mainController', ['$scope','$http','Todos', function($scope, $http, Todos) {
+	.controller('mainController', ['$scope', '$rootScope', '$http','Todos', function($scope, $rootScope, $http, Todos) {
 		$scope.formData = {};
 		$scope.loading = true;
 
 		// GET =====================================================================
 		// when landing on the page, get all todos and show them
 		// use the service to get all the todos
-		Todos.get()
-			.success(function(data) {
-				$scope.todos = data;
-				$scope.loading = false;
-			});
+		if($rootScope.alreadyLogin){
+
+			Todos.get($rootScope.user.name)
+				.success(function(data) {
+					$scope.todos = data;
+					$scope.loading = false;
+				});
+		} else {
+			$scope.loading = false;			
+		}
 
 		// CREATE ==================================================================
 		// when submitting the add form, send the text to the node API
@@ -23,7 +28,7 @@ angular.module('todoController', [])
 			if ($scope.formData.text != undefined) {
 
 				// call the create function from our service (returns a promise object)
-				Todos.create($scope.formData)
+				Todos.create($rootScope.user.name, $scope.formData)
 
 					// if successful creation, call our get function to get all the new todos
 					.success(function(data) {
@@ -38,7 +43,7 @@ angular.module('todoController', [])
 		// delete a todo after checking it
 		$scope.deleteTodo = function(id) {
 			$scope.loading = true;
-			Todos.delete(id)
+			Todos.delete($rootScope.user.name, id)
 				// if successful creation, call our get function to get all the new todos
 				.success(function(data) {
 					$scope.loading = false;
@@ -87,5 +92,6 @@ angular.module('todoController', [])
 			$rootScope.alreadyLogin = false;
 			$rootScope.user = null;
 			$window.sessionStorage.removeItem('user');
+			$window.location = '/';
 		}
 	}]);
