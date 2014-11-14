@@ -47,16 +47,10 @@ angular.module('todoController', [])
 		};
 	}])
 	
-	.controller('userController', ['$scope', '$window', '$http', function($scope, $window, $http) {
+	.controller('userController', ['$scope', '$rootScope', '$window', '$http', function($scope, $rootScope, $window, $http) {
 		$scope.formData = {};
-		// create a user after checking it
 		$scope.message = '';
-		$scope.user = null;
-		$scope.alreadyLogin = false;
-		if($window.sessionStorage["user"]) {
-        	$scope.user = JSON.parse($window.sessionStorage["user"]);
-        	$scope.alreadyLogin = true;
-      	}
+		// create a user after checking it
 		$scope.register = function() {
 			$http.post('/api/user/exist', $scope.formData)
 			.success(function(user){
@@ -65,7 +59,8 @@ angular.module('todoController', [])
 					.success(function(user){
 						$scope.formData = {};
 						$window.sessionStorage["user"] = JSON.stringify(user);
-						$scope.alreadyLogin = true;
+						$rootScope.alreadyLogin = true;
+						$rootScope.user = user;
 						$window.location = '/';
 					});
 				} else {
@@ -82,14 +77,15 @@ angular.module('todoController', [])
 				} else {
 					$scope.formData = {};
 					$window.sessionStorage["user"] = JSON.stringify(user);	
-					$scope.alreadyLogin = true;	
+					$rootScope.alreadyLogin = true;
+					$rootScope.user = user;
 					$window.location = '/';
 				}
 			});
 		}
 		$scope.logout = function() {
-			$scope.alreadyLogin = false;
-			$scope.user = undefined;
+			$rootScope.alreadyLogin = false;
+			$rootScope.user = null;
 			$window.sessionStorage.removeItem('user');
 		}
 	}]);

@@ -19,3 +19,12 @@ scotchTodo.config(['$routeProvider', '$locationProvider', function($routeProvide
 
 	$locationProvider.html5Mode(true);
 }]);
+
+scotchTodo.run(['$rootScope', '$window', function($rootScope, $window) {
+	if($window.sessionStorage["user"]) {
+		$rootScope.user = JSON.parse($window.sessionStorage["user"]);
+		$rootScope.alreadyLogin = true;
+	} else {	
+		$rootScope.alreadyLogin = false;
+	}
+}]);

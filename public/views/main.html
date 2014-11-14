@@ -25,18 +25,19 @@
 
 	<!-- FORM TO CREATE TODOS -->
 	<div id="todo-form" class="row">
-		<div class="col-sm-8 col-sm-offset-2 text-center">
-			<form>
-				<div class="form-group">
 
-					<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-					<input type="text" class="form-control input-lg text-center" placeholder="I want to buy a puppy that will love me forever" ng-model="formData.text">
-				</div>
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				<form>
+					<div class="form-group">
 
-				<!-- createToDo() WILL CREATE NEW TODOS -->
-				<button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">Add</button>
-			</form>
-		</div>
+						<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+						<input type="text" class="form-control input-lg text-center" placeholder="I want to buy a puppy that will love me forever" ng-model="formData.text">
+					</div>
+
+					<!-- createToDo() WILL CREATE NEW TODOS -->
+					<button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()" ng-disabled="!$root.alreadyLogin">Add</button>
+				</form>
+			</div>
 	</div>
 
 	<div class="text-center text-muted">
