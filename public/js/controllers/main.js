@@ -1,4 +1,4 @@
-angular.module('todoController', [])
+angular.module('controllers', [])
 	// inject the Todo service factory into our controller
 	.controller('mainController', ['$scope', '$rootScope', '$http','Todos', function($scope, $rootScope, $http, Todos) {
 		$scope.formData = {};
@@ -52,15 +52,15 @@ angular.module('todoController', [])
 		};
 	}])
 	
-	.controller('userController', ['$scope', '$rootScope', '$window', '$http', function($scope, $rootScope, $window, $http) {
+	.controller('userController', ['$scope', '$rootScope', '$window', '$http', 'Users', function($scope, $rootScope, $window, $http, Users) {
 		$scope.formData = {};
 		$scope.message = '';
 		// create a user after checking it
 		$scope.register = function() {
-			$http.post('/api/user/exist', $scope.formData)
+			Users.exist($scope.formData)
 			.success(function(user){
 				if(user == undefined){
-					$http.post('/api/user/register', $scope.formData)
+					Users.register($scope.formData)
 					.success(function(user){
 						$scope.formData = {};
 						$window.sessionStorage["user"] = JSON.stringify(user);
@@ -75,7 +75,7 @@ angular.module('todoController', [])
 		}
 
 		$scope.login = function() {
-			$http.post('/api/user/login', $scope.formData)
+			Users.login($scope.formData)
 			.success(function(user){
 				if(user == undefined) {
 					$scope.message = 'credential error!';

@@ -1,4 +1,4 @@
-var scotchTodo = angular.module('scotchTodo', ['ngRoute', 'todoController', 'todoService'])
+var scotchTodo = angular.module('scotchTodo', ['ngRoute', 'controllers', 'todoService', 'userService'])
 
 scotchTodo.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 	$routeProvider
